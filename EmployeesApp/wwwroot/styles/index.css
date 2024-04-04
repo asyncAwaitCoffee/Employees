@@ -21,6 +21,10 @@ body {
     font-family: "Segoe UI", Arial, sans-serif;
 }
 
+ul {
+    list-style: none;
+}
+
 form {
     width: 50%;
     max-width: 600px;

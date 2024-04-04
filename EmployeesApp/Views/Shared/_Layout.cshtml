@@ -1,0 +1,25 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <link href="/styles/index.css" rel="stylesheet" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav>
+            <a asp-controller="Home" class=@(ViewBag.Title == "Просмотр" ? "current" : "") asp-action="Index">Просмотр</a>
+            <a asp-controller="Company" class=@(ViewBag.Title == "Компании" ? "current" : "") asp-action="Index">Компании</a>
+            <a asp-controller="Employee" class=@(ViewBag.Title == "Сотрудники" ? "current" : "") asp-action="Index">Сотрудники</a>
+        </nav>
+    </header>
+    <main>
+        @RenderBody()
+    </main>
+    <footer>2024</footer>
+    @RenderSection("scripts", false)
+    @await Html.PartialAsync("Modal")
+</body>
+</html>

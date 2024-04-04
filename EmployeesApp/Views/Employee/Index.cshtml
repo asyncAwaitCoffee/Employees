@@ -1,0 +1,54 @@
+﻿@using EmployeesApp.Models
+@model List<CompanyModel>
+
+@{
+	ViewBag.Title = "Сотрудники";
+}
+<form id="form-employee" action="/" method="post">
+	<fieldset>
+		<legend>Новый сотрудник</legend>
+		<select name="companyId">
+			<option selected disabled>Выберите компанию</option>
+			<option value="0">Без компании</option>
+			@foreach (var company in Model)
+			{
+				<option value="@company.CompanyId">@company.Name</option>
+			}
+		</select>
+		<input type="text" name="firstName" placeholder="Имя" autocomplete="off" />
+		<input type="text" name="surname" placeholder="Фамилия" autocomplete="off" />
+		<input type="text" name="patronymic" placeholder="Отчество" autocomplete="off" />
+		<input type="date" name="birthdate" placeholder="Дата рождения" autocomplete="off" />
+		<input type="text" name="series" placeholder="Серия паспорта" autocomplete="off" />
+		<input type="text" name="number" placeholder="Номер паспорта" autocomplete="off" />
+		<div class="align-self-center">- или -</div>
+		<label for="company-import" class="align-self-center button">Импортировать из файла</label>
+		<input id="company-import" class="display-none" type="file" name="file" accept=".csv" />
+		<button class="button">Добавить</button>
+	</fieldset>
+</form>
+
+@section scripts {
+	<script>
+		const formEmployee = document.querySelector("#form-employee");
+
+		formEmployee.addEventListener("submit", (ev) => {
+			ev.preventDefault();
+			
+			const formData = new FormData(formEmployee);
+			fetch("/employee/create", {
+				method: "POST",
+				body: formData
+			})
+				.then(response => response.json())
+				.then(data => {
+					console.log(data);
+					if (!data.ok) {
+						showModal(data.validation);
+					}
+				});
+			
+			
+		})
+	</script>
+}

@@ -1,0 +1,128 @@
+﻿@using EmployeesApp.Models
+@model List<CompanyModel>
+
+@{
+	ViewBag.Title = "Просмотр";
+}
+<form id="form-see" action="/" method="post">
+	<fieldset>
+		<legend>Просмотр сотрудников</legend>
+		<select name="company">
+			<option selected disabled>Выберите компанию</option>
+			<option value="0">Без компании</option>
+			@foreach (var company in Model)
+			{
+				<option value="@company.CompanyId">@company.Name</option>
+			}
+		</select>
+		<select name="employee">
+			<option value="-1" selected disabled>Выберите сотрудника</option>
+		</select>
+		<div id="company-info" class="info-block">
+			<label>Компания:</label><input id="company-name" type="text" disabled></input>
+			<label>Инн:</label><input id="inn" type="text" disabled></input>
+			<label>Юр. адрес:</label><input id="legal-adress" type="text" disabled></input>
+			<label>Факт. адрес:</label><input id="fact-adress" type="text" disabled></input>
+		</div>
+		<hr />
+		<div id="employee-info" class="info-block">
+			<label>Имя:</label><input id="employee-name" type="text" disabled></input>
+			<label>Фамилия:</label><input id="surname" type="text" disabled></input>
+			<label>Отчество:</label><input id="patronymic" type="text" disabled></input>
+			<label>Дата рождения:</label><input id="birthdate" type="text" disabled></input>
+			<label>Серия паспорта:</label><input id="passport-series" type="text" disabled></input>
+			<label>Номер паспорта:</label><input id="passport-number" type="text" disabled></input>		
+		</div>
+		<button class="button" onclick="downloadFile(2)">Экспортировать компании в файл</button>
+		<div class="align-self-center">- или -</div>
+		<button class="button" onclick="downloadFile(3)">Экспортировать сотрудников в файл</button>
+	</fieldset>
+</form>
+
+@section scripts {
+	<script>
+		const formSee = document.querySelector("#form-see");
+		const companySelect = document.querySelector('[name="company"]')
+		const employeeSelect = document.querySelector('[name="employee"]')
+
+		const companyName = document.querySelector("#company-name");
+		const inn = document.querySelector("#inn");
+		const legalAdress = document.querySelector("#legal-adress");
+		const factAdress = document.querySelector("#fact-adress");
+
+		const employeeName = document.querySelector("#employee-name");
+		const surname = document.querySelector("#surname");
+		const patronymic = document.querySelector("#patronymic");
+		const birthdate = document.querySelector("#birthdate");
+		const passportSeries = document.querySelector("#passport-series");
+		const passportNumber = document.querySelector("#passport-number");
+
+		formSee.addEventListener("submit", ev => {
+			ev.preventDefault();
+		})
+
+		companySelect.addEventListener("change", ev => {
+			loadEmploeesByCompany(ev.target.value);
+
+			fetch(`Company/GetById?companyId=${ev.target.value}`)
+				.then(response => response.json())
+				.then(result => {
+					console.log(result);
+					companyName.value = result.data.name;
+					inn.value = result.data.inn;
+					legalAdress.value = result.data.legal;
+					factAdress.value = result.data.fact;
+
+					employeeName.value = "";
+					surname.value = "";
+					patronymic.value = "";
+					birthdate.value = "";
+					passportSeries.value = "";
+					passportNumber.value = "";
+				})
+		})
+
+		employeeSelect.addEventListener("change", ev => {
+			fetch(`Employee/GetById?employeeId=${ev.target.value}`)
+				.then(response => response.json())
+				.then(result => {
+					console.log(result);
+					employeeName.value = result.data.firstName;
+					surname.value = result.data.surname;
+					patronymic.value = result.data.patronymic;
+					birthdate.value = result.data.birthdate;
+					passportSeries.value = result.data.series;
+					passportNumber.value = result.data.number;
+				})
+		})
+
+		function downloadFile(fileId) {
+			const fileNames = { 2: "Компании", 3: "Сотрудники" };
+
+			fetch(`home/DownloadFile?fileId=${fileId}`)
+				.then(res => res.blob())
+				.then(blob => {
+					const url = window.URL.createObjectURL(blob);
+					const link = document.createElement('a');
+					link.href = url;
+					link.setAttribute('download', `${fileNames[fileId]}.csv`);
+					link.click();
+				})
+		}
+
+		function loadEmploeesByCompany(companyId) {
+			fetch(`Employee/ByCompany?companyId=${companyId}`)
+				.then(response => response.json())
+				.then(result => {
+					employeeSelect.replaceChildren(document.querySelector('option[value="-1"]'))
+					employeeSelect.value = -1;
+					for (const emp of result.data) {
+						const opt = document.createElement("option");
+						opt.value = emp.employeeId;
+						opt.textContent = `${emp.surname} ${emp.firstName} ${emp.patronymic}`;
+						employeeSelect.appendChild(opt);
+					}
+				});
+		}
+	</script>
+}

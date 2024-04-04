@@ -1,0 +1,40 @@
+﻿@{
+	ViewBag.Title = "Компании";
+}
+<form id="form-company" action="/" method="post">
+	<fieldset>
+		<legend>Новая компания</legend>
+		<input type="text" name="name" placeholder="Наименование" autocomplete="off" />
+		<input type="text" name="inn" placeholder="ИНН" autocomplete="off" />
+		<input type="text" name="legal" placeholder="Юридический адрес" autocomplete="off" />
+		<input type="text" name="fact" placeholder="Фактический адрес" autocomplete="off" />
+		<div class="align-self-center">- или -</div>
+		<label for="company-import" class="align-self-center button">Импортировать из файла</label>
+		<input id="company-import" class="display-none" type="file" name="file" accept=".csv" />
+		<button class="button">Добавить</button>
+	</fieldset>
+</form>
+
+@section scripts {
+	<script>
+		const formCompany = document.querySelector("#form-company");
+
+		formCompany.addEventListener("submit", (ev) => {
+			ev.preventDefault();
+			const formData = new FormData(formCompany);
+			fetch("/company/create", {
+				method: "POST",
+				body: formData
+			})
+				.then(response => response.json())
+				.then(data => {
+					console.log(data);
+					if (!data.ok) {
+						showModal(data.validation);
+					}
+				});
+			
+			
+		})
+	</script>
+}

@@ -44,3 +44,7 @@ main {
 .display-none {
     display: none !important;
 }
+
+.margin-top {
+    margin-top: 20px;
+}

@@ -11,38 +11,10 @@
 		<div class="align-self-center">- или -</div>
 		<label for="company-import" class="align-self-center button">Импортировать из файла</label>
 		<input id="company-import" class="display-none" type="file" name="file" accept=".csv" />
-		<button class="button">Добавить</button>
+		<button class="button margin-top">Добавить</button>
 	</fieldset>
 </form>
 
 @section scripts {
-	<script>
-		const formCompany = document.querySelector("#form-company");
-		const companyImport = document.querySelector("#company-import");
-
-		formCompany.addEventListener("submit", async (ev) => {
-			ev.preventDefault();
-			const formData = new FormData(formCompany);
-			await fetch("/company/create", {
-				method: "POST",
-				body: formData
-			})
-				.then(response => {
-					companyImport.value = "";
-					return response.json()
-				})
-				.then(data => {
-					console.log(data);
-					if (!data.ok) {
-						showModal(data.validation);
-					} else {
-						showModal(["Success!"]);
-					}
-				});
-
-
-			
-			
-		})
-	</script>
+	<script src="scripts/company/index.js"></script>
 }

@@ -24,37 +24,10 @@
 		<div class="align-self-center">- или -</div>
 		<label for="employee-import" class="align-self-center button">Импортировать из файла</label>
 		<input id="employee-import" class="display-none" type="file" name="file" accept=".csv" />
-		<button class="button">Добавить</button>
+		<button class="button margin-top">Добавить</button>
 	</fieldset>
 </form>
 
 @section scripts {
-	<script>
-		const formEmployee = document.querySelector("#form-employee");
-		const employeeImport = document.querySelector("#employee-import");
-
-		formEmployee.addEventListener("submit", (ev) => {
-			ev.preventDefault();
-			
-			const formData = new FormData(formEmployee);
-			fetch("/employee/create", {
-				method: "POST",
-				body: formData
-			})
-				.then(response => {
-					employeeImport.value = "";
-					return response.json()
-				})
-				.then(data => {
-					console.log(data);
-					if (!data.ok) {
-						showModal(data.validation);
-					} else {
-						showModal(["Success!"]);
-					}
-				});
-			
-			
-		})
-	</script>
+	<script src="scripts/employee/index.js"></script>
 }

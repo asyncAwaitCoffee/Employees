@@ -17,7 +17,7 @@ namespace EmployeesApp.Controllers
 			}
 			catch (Exception ex)
 			{
-				_errorLog.LogError("HomeController -> Index", "", ex.Message);
+				await _errorLog.LogError("HomeController -> Index", "", ex.Message);
 				return BadRequest();
 			}			
 		}
@@ -50,7 +50,7 @@ namespace EmployeesApp.Controllers
 			}
 			catch (Exception ex)
 			{
-				_errorLog.LogError("HomeController -> DownloadFile", $"fileId = {fileId}", ex.Message);
+				 await _errorLog.LogError("HomeController -> DownloadFile", $"fileId = {fileId}", ex.Message);
 				return BadRequest();
 			}
 

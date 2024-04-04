@@ -3,13 +3,16 @@ using EmployeesApp.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.IdentityModel.Tokens;
+using System;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json;
 
 namespace EmployeesApp.Controllers
 {
-	public class EmployeeController(DataAccess dataAccess) : Controller
+	public class EmployeeController(DataAccess dataAccess, ErrorLog errorLog) : Controller
 	{
 		private readonly DataAccess _dataAccess = dataAccess;
+		private readonly ErrorLog _errorLog = errorLog;
 
 		[HttpGet]
 		public async Task<IActionResult> Index()
@@ -19,8 +22,9 @@ namespace EmployeesApp.Controllers
 				var companies = await _dataAccess.CompaniesGetAll();
 				return View(companies);
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
+				await _errorLog.LogError("EmployeeController -> Index", "", ex.Message);
 				return BadRequest();
 			}
 		}
@@ -36,17 +40,30 @@ namespace EmployeesApp.Controllers
 					filePath = await _dataAccess.LoadFile(file);
 
 					await _dataAccess.EmployeesLoadFromFile(filePath);
+				}
+				else
+				{
+					var validationResults = new List<ValidationResult>();
+					var isValid = Validator.TryValidateObject(employee, new(employee), validationResults, true);
 
-					return Json(new { ok = true });
+					if (!isValid)
+					{
+						return Json(new { ok = false, validation = validationResults.Select(vr => vr.ErrorMessage) });
+					}
+
+					await _dataAccess.EmployeesAdd(employee);
 				}
 			}
-			catch(SqlException ex)
+			catch (SqlException ex)
 			{
 				if (ex.Number == 2627)
 				{
 					return Json(new { ok = false, validation = new string[] { "Сотрудник с указанной серией и номером паспорта уже существует в базе." } });
 				}
-				throw;
+				else
+				{
+					return Json(new { ok = false, validation = new string[] { "Некорректные данные." } });
+				}
 			}
 			catch (FileLoadException)
 			{
@@ -54,7 +71,7 @@ namespace EmployeesApp.Controllers
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine(ex.Message);
+				await _errorLog.LogError("EmployeeController -> Create", JsonSerializer.Serialize(employee), ex.Message);
 			}
 			finally
 			{
@@ -64,33 +81,9 @@ namespace EmployeesApp.Controllers
 				}
 			}
 
-			var validationResults = new List<ValidationResult>();
-			var isValid = Validator.TryValidateObject(employee, new(employee), validationResults, true);
-
-			if (!isValid)
-			{
-				return Json(new { ok = false, validation = validationResults.Select(vr => vr.ErrorMessage) });
-			}
-
-			try
-			{
-				await _dataAccess.EmployeesAdd(employee);
-			}
-			catch (SqlException ex)
-			{
-				if (ex.Number == 2627)
-				{
-					return Json(new { ok = false, validation = new string[] { "Сотрудник с указанной серией и номером паспорта уже существует в базе." } });
-				}
-				throw;
-			}
-			catch (Exception ex)
-			{
-				Console.WriteLine(ex.Message);
-				return Json(new { ok = false });
-			}
-
 			return Json(new { ok = true });
+
+
 		}
 
 		[HttpGet]
@@ -103,15 +96,14 @@ namespace EmployeesApp.Controllers
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine(ex.Message);
-				return Json(new { ok = false });
+				await _errorLog.LogError("EmployeeController -> ByCompany", $"companyId = { companyId }", ex.Message);
+				return Json(new { ok = false, validation = new string[] { "Ошибка на сервере. Обратитесь к администрации сайта." } });
 			}
 		}
 
 		[HttpGet]
 		public async Task<IActionResult> GetById(int employeeId)
 		{
-			Console.WriteLine(employeeId);
 			try
 			{
 				var employee = await _dataAccess.EmployeesGetById(employeeId);
@@ -119,8 +111,8 @@ namespace EmployeesApp.Controllers
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine(ex.Message);
-				return Json(new { ok = false });
+				await _errorLog.LogError("EmployeeController -> GetById", $"companyId = { employeeId }", ex.Message);
+				return Json(new { ok = false, validation = new string[] { "Ошибка на сервере. Обратитесь к администрации сайта." } });
 			}
 		}
 	}

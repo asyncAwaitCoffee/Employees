@@ -2,6 +2,7 @@
 using EmployeesApp.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
+using Microsoft.IdentityModel.Tokens;
 using System.ComponentModel.DataAnnotations;
 
 namespace EmployeesApp.Controllers
@@ -26,12 +27,13 @@ namespace EmployeesApp.Controllers
 		[HttpPost]
 		public async Task<IActionResult> Create(EmployeeModel employee)
 		{
+			string filePath = "";
 			try
 			{
 				var file = HttpContext.Request.Form.Files.FirstOrDefault();
 				if (file is not null)
 				{
-					var filePath = await _dataAccess.LoadFile(file);
+					filePath = await _dataAccess.LoadFile(file);
 
 					await _dataAccess.EmployeesLoadFromFile(filePath);
 
@@ -53,6 +55,13 @@ namespace EmployeesApp.Controllers
 			catch (Exception ex)
 			{
 				Console.WriteLine(ex.Message);
+			}
+			finally
+			{
+				if (!filePath.IsNullOrEmpty() && System.IO.File.Exists(filePath))
+				{
+					System.IO.File.Delete(filePath);
+				}
 			}
 
 			var validationResults = new List<ValidationResult>();
@@ -78,6 +87,7 @@ namespace EmployeesApp.Controllers
 			catch (Exception ex)
 			{
 				Console.WriteLine(ex.Message);
+				return Json(new { ok = false });
 			}
 
 			return Json(new { ok = true });
@@ -110,7 +120,7 @@ namespace EmployeesApp.Controllers
 			catch (Exception ex)
 			{
 				Console.WriteLine(ex.Message);
-				return BadRequest();
+				return Json(new { ok = false });
 			}
 		}
 	}

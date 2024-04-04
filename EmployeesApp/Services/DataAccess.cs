@@ -23,19 +23,19 @@ namespace EmployeesApp.Services
 				connection.Open();
 				string query = "DEPO.COMPANIES_ADD";
 
-				SqlCommand command = new(query, connection)
-				{
-					CommandType = CommandType.StoredProcedure
-				};
-
 				var (name, inn, legal, fact) = company;
 
-				command.Parameters.AddRange([
-					new("@COMPANY_NAME", name),
+				SqlCommand command = new(query, connection)
+				{
+					CommandType = CommandType.StoredProcedure,
+					Parameters =
+					{
+						new("@COMPANY_NAME", name),
 						new("@INN", inn),
 						new("@LEGAL_ADRESS", legal),
 						new("@FACT_ADRESS", fact)
-				]);
+					}
+				};
 
 				var r = await command.ExecuteNonQueryAsync();
 				Console.WriteLine(r);
@@ -49,22 +49,21 @@ namespace EmployeesApp.Services
 				connection.Open();
 				string query = "DEPO.EMPLOYEES_ADD";
 
-				SqlCommand command = new(query, connection)
-				{
-					CommandType = CommandType.StoredProcedure
-				};
-
 				var (name, surname, patronymic, birthdate, passportSeries, passportNumber, companyId) = employee;
 
-				command.Parameters.AddRange([
-					new("@EMPLOYEE_NAME", name),
-					new("@SURNAME", surname),
-					new("@PATRONYMIC", patronymic),
-					new("@BIRTHDATE", birthdate),
-					new("@PASSPORT_SERIES", passportSeries),
-					new("@PASSPORT_NUMBER", passportNumber),
-					new("@COMPANY_ID", companyId)
-				]);
+				SqlCommand command = new(query, connection)
+				{
+					CommandType = CommandType.StoredProcedure,
+					Parameters = {
+						new("@EMPLOYEE_NAME", name),
+						new("@SURNAME", surname),
+						new("@PATRONYMIC", patronymic),
+						new("@BIRTHDATE", birthdate),
+						new("@PASSPORT_SERIES", passportSeries),
+						new("@PASSPORT_NUMBER", passportNumber),
+						new("@COMPANY_ID", companyId)
+					}
+				};
 
 				var r = await command.ExecuteNonQueryAsync();
 				Console.WriteLine(r);
@@ -180,12 +179,11 @@ namespace EmployeesApp.Services
 
 				SqlCommand command = new(query, connection)
 				{
-					CommandType = CommandType.StoredProcedure
+					CommandType = CommandType.StoredProcedure,
+					Parameters = {
+						new("@COMPANY_ID", companyId)
+					}
 				};
-
-				command.Parameters.AddRange([
-					new("@COMPANY_ID", companyId)
-				]);
 
 				SqlDataReader result = await command.ExecuteReaderAsync();
 
@@ -219,12 +217,11 @@ namespace EmployeesApp.Services
 
 				SqlCommand command = new(query, connection)
 				{
-					CommandType = CommandType.StoredProcedure
+					CommandType = CommandType.StoredProcedure,
+					Parameters = {
+						new("@FILE_PATH", filePath)
+					}
 				};
-
-				command.Parameters.AddRange([
-					new("@FILE_PATH", filePath)
-				]);
 
 				await command.ExecuteNonQueryAsync();
 			}
@@ -239,12 +236,11 @@ namespace EmployeesApp.Services
 
 				SqlCommand command = new(query, connection)
 				{
-					CommandType = CommandType.StoredProcedure
+					CommandType = CommandType.StoredProcedure,
+					Parameters = {
+						new("@FILE_PATH", filePath)
+					}
 				};
-
-				command.Parameters.AddRange([
-					new("@FILE_PATH", filePath)
-				]);
 
 				await command.ExecuteNonQueryAsync();
 			}

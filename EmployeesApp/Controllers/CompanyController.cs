@@ -46,6 +46,7 @@ namespace EmployeesApp.Controllers
 			catch (Exception ex)
 			{
 				Console.WriteLine(ex.Message);
+				return Json(new { ok = false });
 			}
 
 			var validationResults = new List<ValidationResult>();
@@ -71,6 +72,7 @@ namespace EmployeesApp.Controllers
 			catch (Exception ex)
 			{
 				Console.WriteLine(ex.Message);
+				return Json(new { ok = false });
 			}
 
 			return Json(new { ok = true });
@@ -87,7 +89,7 @@ namespace EmployeesApp.Controllers
 			catch (Exception ex)
 			{
 				Console.WriteLine(ex.Message);
-				return BadRequest();
+				return Json(new { ok = false });
 			}
 		}
 	}

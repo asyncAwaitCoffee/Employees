@@ -3,9 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EmployeesApp.Controllers
 {
-	public class HomeController(DataAccess dataAccess) : Controller
+	public class HomeController(DataAccess dataAccess, ErrorLog errorLog) : Controller
 	{
 		private readonly DataAccess _dataAccess = dataAccess;
+		private readonly ErrorLog _errorLog = errorLog;
 
 		public async Task<IActionResult> Index()
 		{
@@ -14,8 +15,9 @@ namespace EmployeesApp.Controllers
 				var companies = await _dataAccess.CompaniesGetAll();
 				return View(companies);
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
+				_errorLog.LogError("HomeController -> Index", "", ex.Message);
 				return BadRequest();
 			}			
 		}

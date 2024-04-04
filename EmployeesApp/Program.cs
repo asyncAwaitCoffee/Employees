@@ -8,6 +8,7 @@ namespace EmployeesApp
 		{
 			var builder = WebApplication.CreateBuilder(args);
 			builder.Services.AddSingleton<DataAccess>();
+			builder.Services.AddSingleton<ErrorLog>();
 			builder.Services.AddControllersWithViews();
 
             var app = builder.Build();

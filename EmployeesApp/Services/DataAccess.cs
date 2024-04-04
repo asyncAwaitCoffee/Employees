@@ -9,12 +9,13 @@ namespace EmployeesApp.Services
 	{
         private readonly IConfiguration _configuration;
 		private readonly Regex _regexIsCSV = new(@"\.csv$", RegexOptions.IgnoreCase);
-		private readonly string _loadDirectory = @"D:\MyTemp";
+		private readonly string _loadDirectory = "";
 
 		public DataAccess(IConfiguration configuration)
 		{
 			_configuration = configuration;
-		}
+			_loadDirectory = GetTempFolder().Result!;
+        }
 
 		public async Task CompaniesAdd(CompanyModel company)
 		{
@@ -302,5 +303,32 @@ namespace EmployeesApp.Services
 
 			return filePath;
 		}
+
+		public async Task<string?> GetTempFolder()
+		{
+			string? path = "";
+            using (SqlConnection connection = new(_configuration.GetConnectionString("Default")))
+            {
+                connection.Open();
+                string query = "DEPO.GET_TECH_DATA";
+
+                SqlCommand command = new(query, connection)
+                {
+                    CommandType = CommandType.StoredProcedure,
+					Parameters = {
+						new("@TECH_ID", 1)
+					}
+                };
+
+                path = (string?) await command.ExecuteScalarAsync();
+
+				if (path is null)
+				{
+					throw new DirectoryNotFoundException("В таблице DEPO.TECH_DATA не указан путь.");
+				}
+            }
+
+			return path;
+        }
 	}
 }

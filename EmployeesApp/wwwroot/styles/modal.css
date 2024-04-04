@@ -1,0 +1,22 @@
+﻿#modal p {
+    padding: 15px;
+}
+
+#modal {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(5px) brightness(0.9);
+}
+
+#message-box {
+    position: absolute;
+    backdrop-filter: brightness(0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}

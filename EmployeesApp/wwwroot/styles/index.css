@@ -1,4 +1,9 @@
-﻿:root {
+﻿@import url(modal.css);
+@import url(header.css);
+@import url(footer.css);
+@import url(form.css);
+
+:root {
     --font-size-normal: clamp(0.8rem, 2vmin, 1rem);
     --font-size-big: clamp(1.1rem, 3vmin, 1.4rem);
     --background-color: #007bff;
@@ -25,29 +30,8 @@ ul {
     list-style: none;
 }
 
-form {
-    width: 50%;
-    max-width: 600px;
-
-    @media screen and (width < 900px) {
-        width: 90%;
-    }
-}
-
 .align-self-center {
     align-self: center;
-}
-
-fieldset {
-    display: flex;
-    flex-direction: column;
-    gap: var(--gap-normal);
-    padding: 10px;
-}
-
-input, select {
-    padding: 5px;
-    font-size: var(--font-size-normal);
 }
 
 main {
@@ -57,71 +41,6 @@ main {
     position: relative;
 }
 
-header {
-    display: flex;
-}
-
-nav {
-    display: flex;
-}
-
-a {
-    background-color: var(--background-color);
-    color: white;
-    text-decoration: none;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 0 10px;
-    transition: all 0.3s;
-}
-
-a:hover {
-    background-color: var(--background-color-hover);
-}
-
-a.current {
-    background-color: var(--background-color-active);
-}
-
 .display-none {
     display: none !important;
-}
-
-.button {
-    display: inline-block;
-    padding: 10px 20px;
-    font-size: var(--font-size-normal);
-    font-weight: bold;
-    text-align: center;
-    text-decoration: none;
-    cursor: pointer;
-    border: 2px solid #007bff;
-    color: #ffffff;
-    background-color: #007bff;
-    border-radius: 5px;
-    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
-}
-
-.button:hover {
-    background-color: var(--background-color-hover);
-    border-color: #0056b3;
-}
-
-.button:active {
-    background-color: var(--background-color-active);
-    border-color: #003d80;
-}
-
-footer {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-}
-
-.info-block {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--gap-normal);
 }

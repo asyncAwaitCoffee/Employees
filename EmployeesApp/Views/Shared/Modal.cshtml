@@ -1,51 +1,7 @@
 ﻿<div id="modal" class="display-none">
 	<div id="message-box">
 		<ul id="messages-list"></ul>
-		<button onclick="hideModal()">Ok</button>
+		<button class="button" onclick="hideModal()">Ok</button>
 	</div>
 </div>
-
-<style>
-#modal p {
-	padding: 15px;
-}
-#modal {
-	position: absolute;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	width: 100%;
-	height: 100%;
-	backdrop-filter: blur(5px) brightness(0.9);
-}
-
-#message-box {
-	position: absolute;
-	backdrop-filter: brightness(0.1);
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-}
-</style>
-
-<script>
-	const modal = document.querySelector("#modal");
-	const messagesList = document.querySelector("#messages-list");
-
-	function hideModal() {		
-		modal.classList.add("display-none");
-		while (messagesList.firstChild) {
-			messagesList.removeChild(messagesList.firstChild);
-		}
-	}
-	function showModal(messages) {
-		modal.classList.remove("display-none");		
-
-		for (const message of messages) {
-			const li = document.createElement("li");
-			li.textContent = message;
-			messagesList.appendChild(li);
-		}
-	}
-</script>
+<script src="scripts/modal.js"></script>

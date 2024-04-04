@@ -2,8 +2,6 @@
 using EmployeesApp.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
-using Microsoft.IdentityModel.Tokens;
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
 
@@ -72,18 +70,17 @@ namespace EmployeesApp.Controllers
 			catch (Exception ex)
 			{
 				await _errorLog.LogError("EmployeeController -> Create", JsonSerializer.Serialize(employee), ex.Message);
+				return Json(new { ok = false });
 			}
 			finally
 			{
-				if (!filePath.IsNullOrEmpty() && System.IO.File.Exists(filePath))
+				if (!string.IsNullOrEmpty(filePath) && System.IO.File.Exists(filePath))
 				{
 					System.IO.File.Delete(filePath);
 				}
 			}
 
 			return Json(new { ok = true });
-
-
 		}
 
 		[HttpGet]

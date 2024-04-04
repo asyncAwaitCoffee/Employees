@@ -3,12 +3,14 @@ using EmployeesApp.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json;
 
 namespace EmployeesApp.Controllers
 {
-    public class CompanyController(DataAccess dataAccess) : Controller
+    public class CompanyController(DataAccess dataAccess, ErrorLog errorLog) : Controller
     {
 		private readonly DataAccess _dataAccess = dataAccess;
+		private readonly ErrorLog _errorLog = errorLog;
 
 		[HttpGet]
         public IActionResult Index()
@@ -19,16 +21,27 @@ namespace EmployeesApp.Controllers
 		[HttpPost]
 		public async Task<IActionResult> Create(CompanyModel company)
 		{
+			string filePath = "";
 			try
 			{
 				var file = HttpContext.Request.Form.Files.FirstOrDefault();
 				if (file is not null)
 				{
-					var filePath = await _dataAccess.LoadFile(file);
+					filePath = await _dataAccess.LoadFile(file);
 
 					await _dataAccess.CompaniesLoadFromFile(filePath);
+				}
+				else
+				{
+					var validationResults = new List<ValidationResult>();
+					var isValid = Validator.TryValidateObject(company, new(company), validationResults, true);
 
-					return Json(new { ok = true });
+					if (!isValid)
+					{
+						return Json(new { ok = false, validation = validationResults.Select(vr => vr.ErrorMessage) });
+					}
+
+					await _dataAccess.CompaniesAdd(company);
 				}
 			}
 			catch (SqlException ex)
@@ -37,7 +50,10 @@ namespace EmployeesApp.Controllers
 				{
 					return Json(new { ok = false, validation = new string[] { "Компания с таким ИНН уже существует в базе." } });
 				}
-				throw;
+				else
+				{
+					return Json(new { ok = false, validation = new string[] { "Некорректные данные." } });
+				}
 			}
 			catch (FileLoadException)
 			{
@@ -45,34 +61,15 @@ namespace EmployeesApp.Controllers
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine(ex.Message);
+				await _errorLog.LogError("EmployeeController -> Create", JsonSerializer.Serialize(company), ex.Message);
 				return Json(new { ok = false });
 			}
-
-			var validationResults = new List<ValidationResult>();
-			var isValid = Validator.TryValidateObject(company, new(company), validationResults, true);
-			
-			if (!isValid)
+			finally
 			{
-				return Json(new { ok = false, validation = validationResults.Select(vr => vr.ErrorMessage) });
-			}
-
-			try
-			{
-				await _dataAccess.CompaniesAdd(company);
-			}
-			catch (SqlException ex)
-			{
-				if (ex.Number == 2627)
+				if (!string.IsNullOrEmpty(filePath) && System.IO.File.Exists(filePath))
 				{
-					return Json(new { ok = false, validation = new string[] { "Компания с таким ИНН уже существует в базе." } });
+					System.IO.File.Delete(filePath);
 				}
-				throw;
-			}
-			catch (Exception ex)
-			{
-				Console.WriteLine(ex.Message);
-				return Json(new { ok = false });
 			}
 
 			return Json(new { ok = true });

@@ -33,9 +33,9 @@
 			<label>Серия паспорта:</label><input id="passport-series" type="text" disabled></input>
 			<label>Номер паспорта:</label><input id="passport-number" type="text" disabled></input>		
 		</div>
-		<button class="button" onclick="downloadFile(2)">Экспортировать компании в файл</button>
+		<button class="button" onclick="downloadFile(1)">Экспортировать компании в файл</button>
 		<div class="align-self-center">- или -</div>
-		<button class="button" onclick="downloadFile(3)">Экспортировать сотрудников в файл</button>
+		<button class="button" onclick="downloadFile(2)">Экспортировать сотрудников в файл</button>
 	</fieldset>
 </form>
 
@@ -97,7 +97,7 @@
 		})
 
 		function downloadFile(fileId) {
-			const fileNames = { 2: "Компании", 3: "Сотрудники" };
+			const fileNames = { 1: "Компании", 2: "Сотрудники" };
 
 			fetch(`home/DownloadFile?fileId=${fileId}`)
 				.then(res => res.blob())

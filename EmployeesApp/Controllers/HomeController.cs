@@ -24,21 +24,34 @@ namespace EmployeesApp.Controllers
 
 		public async Task<IActionResult> DownloadFile(int fileId)
 		{
-			// TODO - System.IO.File.Exists(filePath);
-			if (fileId == 2)
+			try
 			{
-				await _dataAccess.CompaniesLoadToFile();
-				//var fileExists = System.IO.File.Exists(filePath);
-				var fs = System.IO.File.OpenRead(@"D:\MyTemp\COMPANIES_full.csv");
-				return File(fs, "application/octet-stream");
-			}
+				if (fileId == 1)
+				{
+					var filePath = @"D:\MyTemp\COMPANIES_full.csv";
+					await _dataAccess.CompaniesLoadToFile();
+					if (System.IO.File.Exists(filePath))
+					{
+						var fs = System.IO.File.OpenRead(filePath);
+						return File(fs, "application/octet-stream");
+					}
+				}
 
-			if (fileId == 3)
+				if (fileId == 2)
+				{
+					var filePath = @"D:\MyTemp\EMPLOYEES_full.csv";
+					await _dataAccess.EmployeesLoadToFile();
+					if (System.IO.File.Exists(filePath))
+					{
+						var fs = System.IO.File.OpenRead(filePath);
+						return File(fs, "application/octet-stream");
+					}
+				}
+			}
+			catch (Exception ex)
 			{
-				await _dataAccess.EmployeesLoadToFile();
-				//var fileExists = System.IO.File.Exists(filePath);
-				var fs = System.IO.File.OpenRead(@"D:\MyTemp\EMPLOYEES_full.csv");
-				return File(fs, "application/octet-stream");
+				_errorLog.LogError("HomeController -> DownloadFile", $"fileId = {fileId}", ex.Message);
+				return BadRequest();
 			}
 
 			return BadRequest();

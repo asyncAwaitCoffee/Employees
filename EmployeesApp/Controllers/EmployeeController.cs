@@ -56,16 +56,17 @@ namespace EmployeesApp.Controllers
 			{
 				if (ex.Number == 2627)
 				{
-					return Json(new { ok = false, validation = new string[] { "Сотрудник с указанной серией и номером паспорта уже существует в базе." } });
+					return Json(new { ok = false, validation = new string[] { "An employee with the specified series and passport number already exists in the database." } });
 				}
 				else
 				{
-					return Json(new { ok = false, validation = new string[] { "Некорректные данные." } });
+					await _errorLog.LogError("EmployeeController -> Create", JsonSerializer.Serialize(employee), ex.Message);
+					return Json(new { ok = false, validation = new string[] { "Incorrect data." } });
 				}
 			}
 			catch (FileLoadException)
 			{
-				return Json(new { ok = false, validation = new string[] { "Некорректный формат файла." } });
+				return Json(new { ok = false, validation = new string[] { "Incorrect file." } });
 			}
 			catch (Exception ex)
 			{
@@ -94,7 +95,7 @@ namespace EmployeesApp.Controllers
 			catch (Exception ex)
 			{
 				await _errorLog.LogError("EmployeeController -> ByCompany", $"companyId = { companyId }", ex.Message);
-				return Json(new { ok = false, validation = new string[] { "Ошибка на сервере. Обратитесь к администрации сайта." } });
+				return Json(new { ok = false, validation = new string[] { "Error on the server. Contact the site administration." } });
 			}
 		}
 
@@ -109,7 +110,7 @@ namespace EmployeesApp.Controllers
 			catch (Exception ex)
 			{
 				await _errorLog.LogError("EmployeeController -> GetById", $"companyId = { employeeId }", ex.Message);
-				return Json(new { ok = false, validation = new string[] { "Ошибка на сервере. Обратитесь к администрации сайта." } });
+				return Json(new { ok = false, validation = new string[] { "Error on the server. Contact the site administration." } });
 			}
 		}
 	}

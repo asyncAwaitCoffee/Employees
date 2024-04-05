@@ -2,40 +2,40 @@
 @model List<CompanyModel>
 
 @{
-	ViewBag.Title = "Просмотр";
+	ViewBag.Title = "Overview";
 }
 <form id="form-see" action="/" method="post">
 	<fieldset>
-		<legend>Просмотр сотрудников</legend>
+		<legend>Overview</legend>
 		<select name="company">
-			<option selected disabled>Выберите компанию</option>
-			<option value="0">Без компании</option>
+			<option selected disabled>Choose company</option>
+			<option value="0">No company</option>
 			@foreach (var company in Model)
 			{
 				<option value="@company.CompanyId">@company.Name</option>
 			}
 		</select>
 		<select name="employee">
-			<option value="-1" selected disabled>Выберите сотрудника</option>
+			<option value="-1" selected disabled>Choose employee</option>
 		</select>
 		<div id="company-info" class="info-block">
-			<label>Компания:</label><input id="company-name" type="text" disabled />
-			<label>Инн:</label><input id="inn" type="text" disabled />
-			<label>Юр. адрес:</label><input id="legal-adress" type="text" disabled />
-			<label>Факт. адрес:</label><input id="fact-adress" type="text" disabled />
+			<label>Company:</label><input id="company-name" type="text" disabled />
+			<label>TIN:</label><input id="inn" type="text" disabled />
+			<label>Legal address:</label><input id="legal-adress" type="text" disabled />
+			<label>Actual address:</label><input id="fact-adress" type="text" disabled />
 		</div>
 		<hr />
 		<div id="employee-info" class="info-block">
-			<label>Имя:</label><input id="employee-name" type="text" disabled />
-			<label>Фамилия:</label><input id="surname" type="text" disabled />
-			<label>Отчество:</label><input id="patronymic" type="text" disabled />
-			<label>Дата рождения:</label><input id="birthdate" type="text" disabled />
-			<label>Серия паспорта:</label><input id="passport-series" type="text" disabled />
-			<label>Номер паспорта:</label><input id="passport-number" type="text" disabled />
+			<label>Name:</label><input id="employee-name" type="text" disabled />
+			<label>Surname:</label><input id="surname" type="text" disabled />
+			<label>Patronymic name:</label><input id="patronymic" type="text" disabled />
+			<label>Birthdate:</label><input id="birthdate" type="text" disabled />
+			<label>Passport series:</label><input id="passport-series" type="text" disabled />
+			<label>passport number:</label><input id="passport-number" type="text" disabled />
 		</div>
-		<button class="button" onclick="downloadFile(1)">Экспортировать компании в файл</button>
-		<div class="align-self-center">- или -</div>
-		<button class="button" onclick="downloadFile(2)">Экспортировать сотрудников в файл</button>
+		<button class="button" onclick="downloadFile(1)">Export companies to file</button>
+		<div class="align-self-center">- or -</div>
+		<button class="button" onclick="downloadFile(2)">Export employees to file</button>
 	</fieldset>
 </form>
 

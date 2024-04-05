@@ -54,7 +54,7 @@ employeeSelect.addEventListener("change", ev => {
 })
 
 function downloadFile(fileId) {
-	const fileNames = { 1: "Компании", 2: "Сотрудники" };
+	const fileNames = { 1: "Companies", 2: "Employees" };
 
 	fetch(`home/DownloadFile?fileId=${fileId}`)
 		.then(res => res.blob())

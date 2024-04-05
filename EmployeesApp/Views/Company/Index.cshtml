@@ -1,17 +1,17 @@
 ﻿@{
-	ViewBag.Title = "Компании";
+	ViewBag.Title = "Companies";
 }
 <form id="form-company" action="/" method="post">
 	<fieldset>
-		<legend>Новая компания</legend>
-		<input type="text" name="name" placeholder="Наименование" autocomplete="off" />
-		<input type="text" name="inn" placeholder="ИНН" autocomplete="off" />
-		<input type="text" name="legal" placeholder="Юридический адрес" autocomplete="off" />
-		<input type="text" name="fact" placeholder="Фактический адрес" autocomplete="off" />
-		<div class="align-self-center">- или -</div>
-		<label for="company-import" class="align-self-center button">Импортировать из файла</label>
+		<legend>New company</legend>
+		<input type="text" name="name" placeholder="Company name" autocomplete="off" />
+		<input type="text" name="inn" placeholder="TIN" autocomplete="off" />
+		<input type="text" name="legal" placeholder="Legal address" autocomplete="off" />
+		<input type="text" name="fact" placeholder="Actual address" autocomplete="off" />
+		<div class="align-self-center">- or -</div>
+		<label for="company-import" class="align-self-center button">Import from file</label>
 		<input id="company-import" class="display-none" type="file" name="file" accept=".csv" />
-		<button class="button margin-top">Добавить</button>
+		<button class="button margin-top">Add</button>
 	</fieldset>
 </form>
 

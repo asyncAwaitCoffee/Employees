@@ -16,14 +16,14 @@ formEmployee.addEventListener("submit", (ev) => {
 	})
 		.then(response => {
 			employeeImport.value = "";
-			employeeImportLabel.textContent = "Импортировать из файла"
+			employeeImportLabel.textContent = "Import from file"
 			return response.json()
 		})
 		.then(data => {
 			if (!data.ok) {
 				showModal(data.validation);
 			} else {
-				showModal(["Выполнено успешно!"]);
+				showModal(["Success!"]);
 			}
 		});
 })

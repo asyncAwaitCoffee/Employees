@@ -33,8 +33,8 @@ namespace EmployeesApp.Services
 					{
 						new("@COMPANY_NAME", name),
 						new("@INN", inn),
-						new("@LEGAL_ADRESS", legal),
-						new("@FACT_ADRESS", fact)
+						new("@LEGAL_ADDRESS", legal),
+						new("@FACT_ADDRESS", fact)
 					}
 				};
 
@@ -95,8 +95,8 @@ namespace EmployeesApp.Services
 								CompanyId = result.GetInt32("COMPANY_ID"),
 								Name = result.GetString("COMPANY_NAME"),
 								Inn = result.GetString("INN"),
-								Legal = result.GetString("LEGAL_ADRESS"),
-								Fact = result.GetString("FACT_ADRESS"),
+								Legal = result.GetString("LEGAL_ADDRESS"),
+								Fact = result.GetString("FACT_ADDRESS"),
 							}
 						);
 				}
@@ -128,8 +128,8 @@ namespace EmployeesApp.Services
 					{
 						Name = result.GetString("COMPANY_NAME"),
 						Inn = result.GetString("INN"),
-						Legal = result.GetString("LEGAL_ADRESS"),
-						Fact = result.GetString("FACT_ADRESS"),
+						Legal = result.GetString("LEGAL_ADDRESS"),
+						Fact = result.GetString("FACT_ADDRESS"),
 					};
 				}
 			}

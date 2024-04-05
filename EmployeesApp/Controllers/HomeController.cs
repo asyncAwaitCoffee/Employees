@@ -17,7 +17,7 @@ namespace EmployeesApp.Controllers
 			}
 			catch (Exception ex)
 			{
-				await _errorLog.LogError("HomeController -> Index", "", ex.Message);
+				await _errorLog.LogError("HomeController -> Index", "", ex.ToString());
 				return BadRequest();
 			}			
 		}

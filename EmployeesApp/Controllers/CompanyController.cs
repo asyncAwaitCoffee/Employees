@@ -48,16 +48,17 @@ namespace EmployeesApp.Controllers
 			{
 				if (ex.Number == 2627)
 				{
-					return Json(new { ok = false, validation = new string[] { "Компания с таким ИНН уже существует в базе." } });
+					return Json(new { ok = false, validation = new string[] { "A company with the same TIN already exists in the database." } });
 				}
 				else
 				{
-					return Json(new { ok = false, validation = new string[] { "Некорректные данные." } });
+					await _errorLog.LogError("EmployeeController -> Create", JsonSerializer.Serialize(company), ex.Message);
+					return Json(new { ok = false, validation = new string[] { "Incorrect data." } });
 				}
 			}
 			catch (FileLoadException)
 			{
-				return Json(new { ok = false, validation = new string[] { "Некорректный формат файла." } });
+				return Json(new { ok = false, validation = new string[] { "Incorrect file." } });
 			}
 			catch (Exception ex)
 			{
@@ -85,7 +86,6 @@ namespace EmployeesApp.Controllers
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine(ex.Message);
 				return Json(new { ok = false });
 			}
 		}

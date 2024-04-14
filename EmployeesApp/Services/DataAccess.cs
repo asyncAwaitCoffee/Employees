@@ -38,8 +38,7 @@ namespace EmployeesApp.Services
 					}
 				};
 
-				var r = await command.ExecuteNonQueryAsync();
-				Console.WriteLine(r);
+				await command.ExecuteNonQueryAsync();
 			}
 		}
 
@@ -66,8 +65,7 @@ namespace EmployeesApp.Services
 					}
 				};
 
-				var r = await command.ExecuteNonQueryAsync();
-				Console.WriteLine(r);
+				await command.ExecuteNonQueryAsync();
 			}
 		}
 

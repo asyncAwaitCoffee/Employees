@@ -24,7 +24,6 @@ companySelect.addEventListener("change", ev => {
 	fetch(`Company/GetById?companyId=${ev.target.value}`)
 		.then(response => response.json())
 		.then(result => {
-			console.log(result);
 			companyName.value = result.data.name;
 			inn.value = result.data.inn;
 			legalAdress.value = result.data.legal;
@@ -43,7 +42,6 @@ employeeSelect.addEventListener("change", ev => {
 	fetch(`Employee/GetById?employeeId=${ev.target.value}`)
 		.then(response => response.json())
 		.then(result => {
-			console.log(result);
 			employeeName.value = result.data.firstName;
 			surname.value = result.data.surname;
 			patronymic.value = result.data.patronymic;
